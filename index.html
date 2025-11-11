@@ -167,7 +167,31 @@
   <meta content="Sraddha — My Heart Beats for You!" name="twitter:title"/>
   <meta content="An infinite expression of love and devotion, crafted in digital form." name="twitter:description"/>
   <meta content="https://sraddha.linkpc.net/favicon,png" name="twitter:image"/>
-  <!-- Structured Data -->
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDTMmp3uxBxSLsplw7g18_XaBKpH3H2EQc",
+    authDomain: "sraddha-57986.firebaseapp.com",
+    projectId: "sraddha-57986",
+    storageBucket: "sraddha-57986.firebasestorage.app",
+    messagingSenderId: "594698203217",
+    appId: "1:594698203217:web:bd264b9365c10349720870",
+    measurementId: "G-6WCJV50138"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
   <script type="application/ld+json">
    {
   "@context": "https://schema.org",
@@ -208,44 +232,53 @@
   </div>
   <script>
    (function() {
-        const WORD = 'Sraddha';
-        const PER_MIN = 72;
-        const INTERVAL_MS = 60000 / PER_MIN;
-        const ticker = document.getElementById('ticker');
-        const countDisplay = document.getElementById('countDisplay');
-        let savedCount = localStorage.getItem('sraddhaCount');
-        let printedCount = savedCount ? BigInt(savedCount) : 183000000n;
-        if (printedCount < 183000000n) printedCount = 183000000n;
+  const WORD = 'Sraddha';
+  const PER_MIN = 72;
+  const INTERVAL_MS = 60000 / PER_MIN;
+  const ticker = document.getElementById('ticker');
+  const countDisplay = document.getElementById('countDisplay');
+  const MAX_NODES = 300;
+  const countRef = firebase.database().ref('count');
 
-        function formatCount(n) {
-          return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        }
-        countDisplay.textContent = formatCount(printedCount);
-        const MAX_NODES = 300;
+  function formatCount(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
 
-        function makeNode(text) {
-          const el = document.createElement('div');
-          el.className = 'word recent';
-          el.textContent = text;
-          setTimeout(() => el.classList.remove('recent'), 600);
-          return el;
-        }
+  let printedCount = 183000000n;
 
-        function printOne() {
-          const node = makeNode(WORD);
-          ticker.insertBefore(node, ticker.firstChild);
-          printedCount++;
-          countDisplay.textContent = formatCount(printedCount);
-          localStorage.setItem('sraddhaCount', printedCount.toString());
-          while (ticker.childElementCount > MAX_NODES) ticker.removeChild(ticker.lastChild);
-        }
+  // 🔹 Get count from Firebase
+  countRef.on('value', (snapshot) => {
+    if (snapshot.exists()) {
+      printedCount = BigInt(snapshot.val());
+      countDisplay.textContent = formatCount(printedCount);
+    }
+  });
 
-        function loop() {
-          printOne();
-          setTimeout(loop, INTERVAL_MS);
-        }
-        loop();
-      })();
+  function makeNode(text) {
+    const el = document.createElement('div');
+    el.className = 'word recent';
+    el.textContent = text;
+    setTimeout(() => el.classList.remove('recent'), 600);
+    return el;
+  }
+
+  function printOne() {
+    const node = makeNode(WORD);
+    ticker.insertBefore(node, ticker.firstChild);
+    printedCount++;
+    countDisplay.textContent = formatCount(printedCount);
+    countRef.set(printedCount.toString()); // 🔹 Update Firebase
+    while (ticker.childElementCount > MAX_NODES) ticker.removeChild(ticker.lastChild);
+  }
+
+  function loop() {
+    printOne();
+    setTimeout(loop, INTERVAL_MS);
+  }
+
+  loop();
+})();
+
   </script>
  </body>
 </html>
