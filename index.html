@@ -1,12 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Sraddha — My Heart Beats for you!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Dancing+Script:wght@500;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-      :root {
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Sraddha — My Heart Beats for you!
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&amp;family=Dancing+Script:wght@500;700&amp;family=Google+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   :root {
         --bg: fff;
         --card: #ffe4ec;
         --accent: #ff69b4;
@@ -147,17 +149,65 @@
           font-size: 32px
         }
       }
-    </style>
-  </head>
-  <body>
-    <div class="wrap">
-      <h1>With every heartbeat, it whispers your name!</h1>
-      <div class="count" id="countDisplay">0</div>
-      <div class="ticker" id="ticker" aria-live="polite"></div>
-      <div class="footer">© 2025 Sraddha. Crafted with ❤️ by @cyberhimself.</div>
-    </div>
-    <script>
-      (function() {
+  </style>
+  <!-- Essential SEO Meta Tags -->
+  <meta content="Sraddha — a serene web experience that endlessly prints a message of love, devotion, and heartbeat in pink hues." name="description"/>
+  <meta content="Sraddha, love, devotion, heartbeat, romantic website, beautiful animation, art project" name="keywords"/>
+  <meta content="@cyberhimself" name="author"/>
+  <meta content="index, follow" name="robots"/>
+  <meta content="#fff0f5" name="theme-color"/>
+  <!-- Open Graph / Facebook -->
+  <meta content="Sraddha — My Heart Beats for You!" property="og:title"/>
+  <meta content="A living page that prints love infinitely — an expression of devotion and beauty." property="og:description"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://yourdomain.com/" property="og:url"/>
+  <meta content="https://yourdomain.com/cover.jpg" property="og:image"/>
+  <!-- Twitter Card -->
+  <meta content="summary_large_image" name="twitter:card"/>
+  <meta content="Sraddha — My Heart Beats for You!" name="twitter:title"/>
+  <meta content="An infinite expression of love and devotion, crafted in digital form." name="twitter:description"/>
+  <meta content="https://yourdomain.com/cover.jpg" name="twitter:image"/>
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+   {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Sraddha",
+  "url": "https://yourdomain.com/",
+  "description": "A poetic interactive web experience that prints the word 'Sraddha' infinitely, symbolizing endless love and devotion.",
+  "author": {
+    "@type": "Person",
+    "name": "@cyberhimself"
+  },
+  "inLanguage": "en",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://yourdomain.com/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+  </script>
+  <!-- Favicon & Manifest -->
+  <link href="/favicon.png" rel="icon" type="image/png"/>
+  <link href="/favicon.png" rel="apple-touch-icon"/>
+  <link href="/site.webmanifest" rel="manifest"/>
+ </head>
+ <body>
+  <div class="wrap">
+   <h1>
+    With every heartbeat, it whispers your name!
+   </h1>
+   <div class="count" id="countDisplay">
+    0
+   </div>
+   <div aria-live="polite" class="ticker" id="ticker">
+   </div>
+   <div class="footer">
+    © 2025 Sraddha. Crafted with ❤️ by @cyberhimself.
+   </div>
+  </div>
+  <script>
+   (function() {
         const WORD = 'Sraddha';
         const PER_MIN = 72;
         const INTERVAL_MS = 60000 / PER_MIN;
@@ -196,6 +246,6 @@
         }
         loop();
       })();
-    </script>
-  </body>
+  </script>
+ </body>
 </html>
