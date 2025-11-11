@@ -165,72 +165,82 @@
   </div>
 
   <!-- ✅ Firebase Modular Setup -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDTMmp3uxBxSLsplw7g18_XaBKpH3H2EQc",
-      authDomain: "sraddha-57986.firebaseapp.com",
-      projectId: "sraddha-57986",
-      storageBucket: "sraddha-57986.firebasestorage.app",
-      messagingSenderId: "594698203217",
-      appId: "1:594698203217:web:bd264b9365c10349720870",
-      measurementId: "G-6WCJV50138",
-      databaseURL: "https://sraddha-57986-default-rtdb.firebaseio.com/"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyDTMmp3uxBxSLsplw7g18_XaBKpH3H2EQc",
+    authDomain: "sraddha-57986.firebaseapp.com",
+    projectId: "sraddha-57986",
+    storageBucket: "sraddha-57986.firebasestorage.app",
+    messagingSenderId: "594698203217",
+    appId: "1:594698203217:web:bd264b9365c10349720870",
+    measurementId: "G-6WCJV50138",
+    databaseURL: "https://sraddha-57986-default-rtdb.firebaseio.com/"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const countRef = ref(db, "count");
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const countRef = ref(db, "count");
 
-    const ticker = document.getElementById("ticker");
-    const countDisplay = document.getElementById("countDisplay");
-    const WORD = "Sraddha";
-    const PER_MIN = 72;
-    const INTERVAL_MS = 60000 / PER_MIN;
-    const MAX_NODES = 300;
-    let printedCount = 183000000n;
+  const ticker = document.getElementById("ticker");
+  const countDisplay = document.getElementById("countDisplay");
+  const WORD = "Sraddha";
+  const PER_MIN = 72;
+  const INTERVAL_MS = 60000 / PER_MIN;
+  const MAX_NODES = 300;
 
-    function formatCount(n) {
-      return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+  let printedCount = null; // initially unknown
+  let hasStarted = false;
 
-    // Sync count from Firebase
-    onValue(countRef, (snapshot) => {
-      if (snapshot.exists()) {
-        printedCount = BigInt(snapshot.val());
-        countDisplay.textContent = formatCount(printedCount);
-      }
-    });
+  function formatCount(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 
-    function makeNode(text) {
-      const el = document.createElement("div");
-      el.className = "word recent";
-      el.textContent = text;
-      setTimeout(() => el.classList.remove("recent"), 600);
-      return el;
-    }
+  function makeNode(text) {
+    const el = document.createElement("div");
+    el.className = "word recent";
+    el.textContent = text;
+    setTimeout(() => el.classList.remove("recent"), 600);
+    return el;
+  }
 
-    function updateCount(value) {
-      set(countRef, value.toString());
-    }
+  function updateCount(value) {
+    set(countRef, value.toString());
+  }
 
-    function printOne() {
-      const node = makeNode(WORD);
-      ticker.insertBefore(node, ticker.firstChild);
-      printedCount++;
-      countDisplay.textContent = formatCount(printedCount);
-      updateCount(printedCount);
-      while (ticker.childElementCount > MAX_NODES) ticker.removeChild(ticker.lastChild);
-    }
+  function printOne() {
+    if (printedCount === null) return; // wait until Firebase value is loaded
+    const node = makeNode(WORD);
+    ticker.insertBefore(node, ticker.firstChild);
+    printedCount++;
+    countDisplay.textContent = formatCount(printedCount);
+    updateCount(printedCount);
+    while (ticker.childElementCount > MAX_NODES) ticker.removeChild(ticker.lastChild);
+  }
 
-    function loop() {
+  function startTicker() {
+    if (hasStarted) return;
+    hasStarted = true;
+    const loop = () => {
       printOne();
       setTimeout(loop, INTERVAL_MS);
-    }
-
+    };
     loop();
-  </script>
+  }
+
+  // ✅ Load from Firebase first
+  onValue(countRef, (snapshot) => {
+    if (snapshot.exists()) {
+      printedCount = BigInt(snapshot.val());
+    } else {
+      printedCount = 183000000n; // only if database empty
+      updateCount(printedCount);
+    }
+    countDisplay.textContent = formatCount(printedCount);
+    startTicker();
+  });
+</script>
 </body>
 </html>
